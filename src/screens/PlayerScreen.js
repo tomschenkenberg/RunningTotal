@@ -1,7 +1,6 @@
 /* @flow */
 
-import React, { Component } from "react";
-import { Text, Button } from "native-base";
+import React from "react";
 import {
   StyleSheet,
   FlatList,
@@ -9,13 +8,14 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from "react-native";
-import { List, ListItem } from "react-native-elements";
+import { Text, Button,List, ListItem, Container, Content  } from "native-base";
+//import { } from "react-native-elements";
 import { toJS } from "mobx";
 import { observer, inject } from "mobx-react";
 
 @inject("playerStore")
 @observer
-export default class PlayerScreen extends Component {
+export default class PlayerScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: `Player ${navigation.state.params.username}`
   });
@@ -24,28 +24,15 @@ export default class PlayerScreen extends Component {
     const { params } = this.props.navigation.state;
 
     return (
-      <View style={styles.row}>
+      <ListItem>
         <Text style={styles.col1}>#{item[0]}</Text>
         <Text style={styles.col2}>{item[1]}</Text>
-        <Button
-          style={styles.col3}
+        <View style={styles.col3}>
+        <Button danger
           onPress={() => this.props.playerStore.getPlayer(params.userid).deleteScore(item[0])}
-          title="X"
-        />
-      </View>
-    );
-  };
-
-  _renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: "86%",
-          backgroundColor: "#CED0CE",
-          marginLeft: "14%"
-        }}
-      />
+        ><Text>X</Text></Button>
+        </View>
+      </ListItem>
     );
   };
 
@@ -77,46 +64,36 @@ export default class PlayerScreen extends Component {
     const totalscore = this.props.playerStore.getPlayer(params.userid)
       .totalscore;
     return (
-      <View style={[styles.row, { backgroundColor: "#cccccc" }]}>
+      <ListItem style={{ backgroundColor: "#cccccc" }}>
         <Text style={styles.col1} />
         <Text style={styles.col2}>{totalscore}</Text>
         <Text style={styles.col3} />
-      </View>
+      </ListItem>
     );
   };
 
   render() {
-    // The screen's current route is passed in to `props.navigation.state`:
     const { params } = this.props.navigation.state;
     return (
-      <View style={styles.container}>
+      <Container>
+      <Content>
         <List>
           <FlatList
             data={this.props.playerStore.getPlayer(params.userid).scores}
             keyExtractor={index => index}
             renderItem={this._renderItem}
-            ItemSeparatorComponent={this._renderSeparator}
             ListHeaderComponent={this._renderHeader}
             ListFooterComponent={this._renderFooter}
           />
         </List>
-      </View>
+      </Content>
+      </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#181e29"
-  },
-  row: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    padding: 8,
-    paddingRight: 0
-  },
+
   footer: {
     color: "#444444",
     padding: 4,
@@ -144,7 +121,7 @@ const styles = StyleSheet.create({
   col3: {
     flex: 1,
     top: 0,
-    marginRight: 10,
+    margin: 0,
     justifyContent: "center"
   }
 });

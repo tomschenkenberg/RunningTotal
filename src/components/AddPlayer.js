@@ -1,14 +1,8 @@
 /* @flow */
 
 import React, { Component } from "react";
-import { Text, Icon } from "native-base";
-import {
-  StyleSheet,
-  View,
-  Button,
-  TextInput,
-  TouchableOpacity
-} from "react-native";
+import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
+import { Text, Icon, Button } from "native-base";
 import { observer, inject } from "mobx-react";
 
 @inject("playerStore")
@@ -40,7 +34,7 @@ export default class AddPlayer extends Component {
               multiline={false}
               ref={component => (this._textInput = component)}
               style={styles.inputtext}
-              placeholder="Your name"
+              placeholder="Player name"
               placeholderTextColor="#444"
               underlineColorAndroid="#888"
               onChangeText={playername => this.setState({ playername })}
@@ -48,12 +42,13 @@ export default class AddPlayer extends Component {
           </View>
           <View style={styles.right}>
             <Button
+              info
               onPress={() => this.handleCreatePlayer()}
-              title="Add Player"
-              color="#841584"
               accessibilityLabel="Add Player"
               disabled={this.state.playername == "" || playercount > 8}
-            />
+            >
+              <Text>Add Player</Text>
+            </Button>
           </View>
         </View>
       </View>

@@ -44,9 +44,9 @@ export default class PlayerStore {
 
   @action
   loadPlayers() {
-    this.addPlayer("Sjaak");
+    this.addPlayer("Bono");
     this.addPlayer("Ghandi");
-    this.addPlayer("Hubert");
+    this.addPlayer("Gandalf");
     this.addPlayer("Flipper");
   }
 
@@ -89,7 +89,6 @@ export default class PlayerStore {
         sum += part._scores[i];
       }
       part.totscore = sum;
-
       datalist.push(part);
     }
 
@@ -147,7 +146,7 @@ export class Player {
 
   @action
   deleteScore(key: number) {
-    // this._scores.delete(key);
+    this._scores.delete(key);
   }
 
   @computed

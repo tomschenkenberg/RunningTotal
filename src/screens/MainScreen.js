@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from "react";
+import React from "react";
 import {
   Container,
   Title,
@@ -12,7 +12,9 @@ import {
   Body,
   Icon,
   Button,
-  Text
+  Text,
+  ListItem,
+  List
 } from "native-base";
 import {
   StyleSheet,
@@ -30,7 +32,7 @@ import { Observer } from "mobx-react/native";
 
 @inject("playerStore")
 @observer
-export default class MainScreen extends Component {
+export default class MainScreen extends React.Component {
   state = {
     isModalVisible: false,
     currentPlayerId: 0,
@@ -70,6 +72,36 @@ export default class MainScreen extends Component {
     this._closeModal();
   }
 
+  _renderModalContent = () => (
+  <View style={styles.modalContent}>
+    <Text>Enter new score for {this.state.currentPlayerName}</Text>
+    <TextInput
+      autoCorrect={false}
+      returnKeyType="done"
+      multiline={false}
+      style={styles.inputscore}
+      maxLength={4}
+      keyboardType="numeric"
+      onChangeText={this.handleNewScore}
+      value={this.state.scoreInput}
+      autoFocus={true}
+    />
+    <View style={styles.buttoncontainer}>
+      {this._renderButton(
+        "  +  ",
+        () => this._submitModal(this.state.scoreInput),
+        this.state.scoreInput == ""
+      )}
+      {this._renderButton(
+        "  -  ",
+        () => this._submitModal(-parseInt(this.state.scoreInput)),
+        this.state.scoreInput == ""
+      )}
+      {this._renderButton("Cancel", () => this._closeModal())}
+    </View>
+  </View>
+  );
+
   handleNewScore = text => {
     let newText = "";
     let numbers = "0123456789";
@@ -89,7 +121,9 @@ export default class MainScreen extends Component {
     return (
       <Observer>
         {() => (
-          <View style={[styles.container, { backgroundColor: item.bgcolor }]}>
+          <ListItem
+            style={[styles.container, { backgroundColor: item.bgcolor }]}
+          >
             <View style={styles.left}>
               <TouchableOpacity
                 style={styles.left}
@@ -110,7 +144,7 @@ export default class MainScreen extends Component {
                 <Text style={styles.score}>{totalscore}</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </ListItem>
         )}
       </Observer>
     );
@@ -138,60 +172,30 @@ export default class MainScreen extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-
     return (
       <Container>
         <Content>
-          <View style={styles.maincontainer}>
-            <Modal
-              visible={this.state.isModalVisible}
-              onRequestClose={() => this._closeModal()}
-              backdropColor={"red"}
-              backdropOpacity={1}
-              animationInTiming={2000}
-              animationOutTiming={2000}
-              backdropTransitionInTiming={2000}
-              backdropTransitionOutTiming={2000}
-            >
-              <View style={styles.modalContent}>
-                <Text>Enter new score for {this.state.currentPlayerName}</Text>
-                <TextInput
-                  autoCorrect={false}
-                  returnKeyType="done"
-                  multiline={false}
-                  style={styles.inputscore}
-                  maxLength={4}
-                  keyboardType="numeric"
-                  onChangeText={this.handleNewScore}
-                  value={this.state.scoreInput}
-                  autoFocus={true}
-                />
-                <View style={styles.buttoncontainer}>
-                  {this._renderButton(
-                    "  +  ",
-                    () => this._submitModal(this.state.scoreInput),
-                    this.state.scoreInput == ""
-                  )}
-                  {this._renderButton(
-                    "  -  ",
-                    () => this._submitModal(-parseInt(this.state.scoreInput)),
-                    this.state.scoreInput == ""
-                  )}
-                  {this._renderButton("Cancel", () => this._closeModal())}
-                </View>
-              </View>
-            </Modal>
-            <View>
-              <FlatList
-                data={this.props.playerStore.getSortedArray()}
-                keyExtractor={item => item.id}
-                renderItem={this._renderItem}
-                ItemSeparatorComponent={this._renderSeparator}
-                ListHeaderComponent={this._renderHeader}
-                ListFooterComponent={this._renderFooter}
-              />
-            </View>
-          </View>
+          <Modal
+            visible={this.state.isModalVisible}
+            onRequestClose={() => this._closeModal()}
+            backdropColor={"red"}
+            backdropOpacity={1}
+            animationInTiming={2000}
+            animationOutTiming={2000}
+            backdropTransitionInTiming={2000}
+            backdropTransitionOutTiming={2000}
+          >{this._renderModalContent()}
+          </Modal>
+          <List>
+            <FlatList
+              data={this.props.playerStore.getSortedArray()}
+              keyExtractor={item => item.id}
+              renderItem={this._renderItem}
+              ItemSeparatorComponent={this._renderSeparator}
+              ListHeaderComponent={this._renderHeader}
+              ListFooterComponent={this._renderFooter}
+            />
+          </List>
         </Content>
         <Footer>
           <FooterTab>
@@ -269,7 +273,7 @@ const styles = StyleSheet.create({
     textAlign: "right"
   },
   seperator: {
-    height: 2,
+    height: 0,
     width: "100%",
     backgroundColor: "#CED0CE",
     marginLeft: "0%"
