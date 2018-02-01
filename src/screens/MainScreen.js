@@ -26,7 +26,6 @@ import {
 
 // https://github.com/react-native-community/react-native-modal
 import Modal from "react-native-modal";
-import { observable, toJS } from "mobx";
 import { observer, inject } from "mobx-react";
 import { Observer } from "mobx-react/native";
 
@@ -172,6 +171,7 @@ export default class MainScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
+    const playersdata = this.props.playerStore.SortedArray;
     return (
       <Container>
         <Content>
@@ -188,7 +188,7 @@ export default class MainScreen extends React.Component {
           </Modal>
           <List>
             <FlatList
-              data={this.props.playerStore.getSortedArray()}
+              data={playersdata}
               keyExtractor={item => item.id}
               renderItem={this._renderItem}
               ItemSeparatorComponent={this._renderSeparator}

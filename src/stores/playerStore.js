@@ -10,7 +10,7 @@ import {
   map,
   ObservableMap
 } from "mobx";
-import { persist } from "mobx-persist";
+import store from "react-native-simple-store";
 
 // Nice colors for each player
 const colorArr = [
@@ -25,35 +25,50 @@ const colorArr = [
   "#ccecc6"
 ];
 var nextColorId = 0;
+var nextPlayerId = 100;
 
-useStrict(true);
+//useStrict(true);
 
 // -----------------------------------------------------------------
 export default class PlayerStore {
-  @persist("map")
-  @observable
-  players = new Map();
-
-  @persist
-  @observable
-  nextPlayerId = 100;
+  @observable players = new Map();
 
   constructor() {
-    this.loadPlayers();
+    this.loadFromStorage();
   }
 
   @action
-  loadPlayers() {
-    this.addPlayer("Bono");
-    this.addPlayer("Ghandi");
-    this.addPlayer("Gandalf");
-    this.addPlayer("Flipper");
+  async loadFromStorage() {
+    store.keys().then(keys => {
+      for (var playername of keys) {
+        store.get(playername).then(player => {
+          console.log("KEY=" + player.name + ", " + player.bgcolor);
+          const p = Player.deserialize(player);
+          this.players.set(p.id,p);
+        });
+      }
+    });
+
+    //    this.addPlayer("Bono");
+    //    this.addPlayer("Ghandi");
+    //    this.addPlayer("Gandalf");
+    //    this.addPlayer("Flipper");
   }
 
   @action
-  addPlayer(name: string) {
-    const newid = this.nextPlayerId++;
-    this.players.set(newid, new Player(newid, name));
+  saveToStorage() {
+    for (var v of this.players.values()) {
+      v.save();
+    }
+  }
+
+  @action
+  addPlayer(name: string): number {
+    const newid = ++nextPlayerId;
+    const player = new Player(newid, name);
+    player.save();
+    this.players.set(newid, player);    
+    return newid;
   }
 
   @computed
@@ -68,20 +83,22 @@ export default class PlayerStore {
 
   @action
   deletePlayer(id: number) {
+    store.delete(this.getPlayer(id).name);
     this.players.delete(id);
   }
 
   @action
   resetScores() {
     for (var v of this.players.values()) v.clearScores();
+    this.saveToStorage();
   }
 
-  @action
-  getSortedArray(): Array {
+  @computed
+  get SortedArray(): Array {
     var datalist = [];
 
     for (var v of this.players.values()) {
-      part = toJS(v);
+      var part = toJS(v);
 
       // add a totalscore property into the array
       var sum = 0;
@@ -107,19 +124,10 @@ function isNumeric(n) {
 
 // -----------------------------------------------------------------
 export class Player {
-  @persist
-  @observable
-  id = null;
-  @persist
-  @observable
-  bgcolor = "";
-  @persist
-  @observable
-  name = "";
-
-  @persist("map")
-  @observable
-  _scores = new Map();
+  @observable id = null;
+  @observable bgcolor = "";
+  @observable name = "";
+  @observable _scores = new Map();
 
   constructor(newid: number, name: string) {
     // Capatalize the first letter of the name, max 12 characters:
@@ -128,15 +136,34 @@ export class Player {
     this.bgcolor = colorArr[nextColorId++];
 
     // Some random scores for debugging/development:
-    this.addScore(Math.floor(Math.random() * 20 + 1) * 5);
-    this.addScore(Math.floor(Math.random() * 60 + 1) * 5);
-    this.addScore(Math.floor(Math.random() * 15 + 1) * 5);
+    //this.addScore(Math.floor(Math.random() * 20 + 1) * 5);
+    //this.addScore(Math.floor(Math.random() * 60 + 1) * 5);
+    //this.addScore(Math.floor(Math.random() * 15 + 1) * 5);
+  }
+
+  @action
+  serialize() {
+    return {
+      bgcolor: this.bgcolor,
+      name: this.name,
+      scores: JSON.stringify([...this._scores])
+    };
+  }
+
+  @action
+  static deserialize(json): Player {
+    const player = new Player(++nextPlayerId, json["name"]);
+    player.bgcolor = json["bgcolor"];
+    console.log(JSON.parse(json["scores"]));
+    player._scores = new Map(JSON.parse(json["scores"]));
+    return player;
   }
 
   @action
   addScore(score: number) {
     var newscore = isNumeric(score) ? parseInt(score) : 0;
     this._scores.set(this.scorecount + 1, newscore);
+    this.save();
   }
 
   @action
@@ -147,6 +174,11 @@ export class Player {
   @action
   deleteScore(key: number) {
     this._scores.delete(key);
+  }
+
+  @action
+  save() {
+    store.update(this.name, this.serialize());
   }
 
   @computed

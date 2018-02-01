@@ -9,8 +9,6 @@ import {
   ActivityIndicator
 } from "react-native";
 import { Text, Button,List, ListItem, Container, Content  } from "native-base";
-//import { } from "react-native-elements";
-import { toJS } from "mobx";
 import { observer, inject } from "mobx-react";
 
 @inject("playerStore")
