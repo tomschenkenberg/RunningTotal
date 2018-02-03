@@ -14,18 +14,21 @@ import {
   Button,
   Text,
   ListItem,
-  List
+  List,
+  Card,
+  CardItem,
+  Item,
+  Input
 } from "native-base";
 import {
   StyleSheet,
   FlatList,
-  View,
-  TouchableOpacity,
-  TextInput
+  TouchableOpacity, Modal
 } from "react-native";
 
 // https://github.com/react-native-community/react-native-modal
-import Modal from "react-native-modal";
+//import Modal from "react-native-modal";
+
 import { observer, inject } from "mobx-react";
 import { Observer } from "mobx-react/native";
 
@@ -55,50 +58,64 @@ export default class MainScreen extends React.Component {
   }
 
   _submitModal(value: number = 0) {
-    console.log("SUBMITmodal: " + this.state.currentPlayerId);
-    console.log(this.props.playerStore.getPlayer(this.state.currentPlayerId));
-
-    console.log("data = " + this.props.playerStore.players.length);
-
-    //this.props.playerStore.addPlayerScore(34, 3);
-
     this.props.playerStore
       .getPlayer(this.state.currentPlayerId)
       .addScore(value);
-
-    console.log("done");
-
     this._closeModal();
   }
 
+  _renderButton = (text, onPress, disable = false) => (
+    <Button success onPress={onPress} disabled={disable}>
+      <Text> {text} </Text>
+    </Button>
+  );
+
   _renderModalContent = () => (
-  <View style={styles.modalContent}>
-    <Text>Enter new score for {this.state.currentPlayerName}</Text>
-    <TextInput
-      autoCorrect={false}
-      returnKeyType="done"
-      multiline={false}
-      style={styles.inputscore}
-      maxLength={4}
-      keyboardType="numeric"
-      onChangeText={this.handleNewScore}
-      value={this.state.scoreInput}
-      autoFocus={true}
-    />
-    <View style={styles.buttoncontainer}>
-      {this._renderButton(
-        "  +  ",
-        () => this._submitModal(this.state.scoreInput),
-        this.state.scoreInput == ""
-      )}
-      {this._renderButton(
-        "  -  ",
-        () => this._submitModal(-parseInt(this.state.scoreInput)),
-        this.state.scoreInput == ""
-      )}
-      {this._renderButton("Cancel", () => this._closeModal())}
-    </View>
-  </View>
+    <Card>
+      <CardItem header>
+        <Text>Enter new score for {this.state.currentPlayerName}</Text>
+      </CardItem>
+      <CardItem>
+        <Left />
+        <Body>
+          <Item regular>
+            <Input
+              autoCorrect={false}
+              returnKeyType="done"
+              multiline={false}
+              style={styles.inputscore}
+              maxLength={4}
+              keyboardType="numeric"
+              onChangeText={this.handleNewScore}
+              value={this.state.scoreInput}
+              autoFocus={true}
+            />
+          </Item>
+        </Body>
+        <Right />
+      </CardItem>
+      <CardItem footer>
+        <Left>
+          {this._renderButton(
+            "  +  ",
+            () => this._submitModal(this.state.scoreInput),
+            this.state.scoreInput == ""
+          )}
+        </Left>
+        <Body>
+          {this._renderButton(
+            "  -  ",
+            () => this._submitModal(-parseInt(this.state.scoreInput)),
+            this.state.scoreInput == ""
+          )}
+        </Body>
+        <Right>
+          <Button dark onPress={() => this._closeModal()}>
+            <Text> Cancel </Text>
+          </Button>
+        </Right>
+      </CardItem>
+    </Card>
   );
 
   handleNewScore = text => {
@@ -113,6 +130,10 @@ export default class MainScreen extends React.Component {
     this.setState({ scoreInput: newText });
   };
 
+  _renderHeader = () => {
+    return <ListItem header first />;
+  };
+
   _renderItem = ({ item }) => {
     const scorecount = this.props.playerStore.getPlayer(item.id).scorecount;
     const totalscore = this.props.playerStore.getPlayer(item.id).totalscore;
@@ -120,12 +141,9 @@ export default class MainScreen extends React.Component {
     return (
       <Observer>
         {() => (
-          <ListItem
-            style={[styles.container, { backgroundColor: item.bgcolor }]}
-          >
-            <View style={styles.left}>
+          <ListItem style={{ backgroundColor: item.bgcolor }}>
+            <Left>
               <TouchableOpacity
-                style={styles.left}
                 onPress={() =>
                   this.props.navigation.navigate("Player", {
                     userid: item.id,
@@ -134,40 +152,36 @@ export default class MainScreen extends React.Component {
                 }
               >
                 <Text style={styles.name}>{item.name}</Text>
+              </TouchableOpacity>
+            </Left>
+            <Body>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("Player", {
+                    userid: item.id,
+                    username: item.name
+                  })
+                }
+              >
                 <Text style={styles.name}>#{scorecount}</Text>
               </TouchableOpacity>
+            </Body>
+            <Right>
               <TouchableOpacity
-                style={styles.scoreview}
                 onPress={() => this._openModal(item.id, item.name)}
               >
                 <Text style={styles.score}>{totalscore}</Text>
               </TouchableOpacity>
-            </View>
+            </Right>
           </ListItem>
         )}
       </Observer>
     );
   };
 
-  _renderSeparator = () => {
-    return <View style={styles.seperator} />;
-  };
-
-  _renderHeader = () => {
-    return <View style={styles.headerfooter} />;
-  };
-
   _renderFooter = () => {
-    return <View style={styles.headerfooter} />;
+    return <ListItem footer />;
   };
-
-  _renderButton = (text, onPress, disable = false) => (
-    <TouchableOpacity onPress={onPress} disabled={disable}>
-      <View style={styles.button}>
-        <Text>{text}</Text>
-      </View>
-    </TouchableOpacity>
-  );
 
   render() {
     const { navigate } = this.props.navigation;
@@ -176,6 +190,7 @@ export default class MainScreen extends React.Component {
       <Container>
         <Content>
           <Modal
+            transparent={true}
             visible={this.state.isModalVisible}
             onRequestClose={() => this._closeModal()}
             backdropColor={"red"}
@@ -184,14 +199,14 @@ export default class MainScreen extends React.Component {
             animationOutTiming={2000}
             backdropTransitionInTiming={2000}
             backdropTransitionOutTiming={2000}
-          >{this._renderModalContent()}
+          >
+            {this._renderModalContent()}
           </Modal>
           <List>
             <FlatList
               data={playersdata}
               keyExtractor={item => item.id}
               renderItem={this._renderItem}
-              ItemSeparatorComponent={this._renderSeparator}
               ListHeaderComponent={this._renderHeader}
               ListFooterComponent={this._renderFooter}
             />
@@ -221,69 +236,13 @@ export default class MainScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  maincontainer: {
-    flex: 1,
-    backgroundColor: "#181e29"
-  },
-  buttoncontainer: {
-    justifyContent: "flex-end",
-    flexDirection: "row"
-  },
-  button: {
-    backgroundColor: "lightblue",
-    padding: 12,
-    margin: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)"
-  },
-  container: {
-    flex: 1,
-    flexDirection: "row",
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 15,
-    paddingBottom: 10,
-    backgroundColor: "#181e29"
-  },
-  left: {
-    flex: 3,
-    flexDirection: "row",
-    top: 0,
-    padding: 3
-  },
-  right: {
-    flex: 2,
-    top: 5,
-    padding: 8,
-    justifyContent: "center"
-  },
   name: {
-    fontSize: 22,
-    flex: 2
-  },
-  scoreview: {
-    flex: 1,
-    paddingRight: 50
+    fontSize: 20
   },
   score: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: 20,
     textAlign: "right"
-  },
-  seperator: {
-    height: 0,
-    width: "100%",
-    backgroundColor: "#CED0CE",
-    marginLeft: "0%"
-  },
-  headerfooter: {
-    height: 40,
-    width: "100%",
-    backgroundColor: "#CED0CE",
-    marginLeft: "0%",
-    padding: 10
   },
   inputscore: {
     color: "#222222",
@@ -291,13 +250,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: "right",
     width: "40%"
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 22,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)"
   }
 });
