@@ -10,7 +10,6 @@ import {
   Left,
   Right,
   Body,
-  Icon,
   Button,
   Text,
   ListItem,
@@ -20,17 +19,12 @@ import {
   Item,
   Input
 } from "native-base";
-import {
-  StyleSheet,
-  FlatList,
-  TouchableOpacity, Modal
-} from "react-native";
-
-// https://github.com/react-native-community/react-native-modal
-//import Modal from "react-native-modal";
+import { StyleSheet, FlatList, TouchableOpacity, Modal } from "react-native";
 
 import { observer, inject } from "mobx-react";
 import { Observer } from "mobx-react/native";
+
+import Icon from "../components/TIcon";
 
 @inject("playerStore")
 @observer
@@ -43,7 +37,7 @@ export default class MainScreen extends React.Component {
   };
 
   static navigationOptions = {
-    title: "RunningTotal"
+    title: "Totally"
   };
 
   _openModal(id: number, playername: string) {
@@ -66,7 +60,7 @@ export default class MainScreen extends React.Component {
 
   _renderButton = (text, onPress, disable = false) => (
     <Button success onPress={onPress} disabled={disable}>
-      <Text> {text} </Text>
+      <Text>{text}</Text>
     </Button>
   );
 
@@ -96,18 +90,22 @@ export default class MainScreen extends React.Component {
       </CardItem>
       <CardItem footer>
         <Left>
-          {this._renderButton(
-            "  +  ",
-            () => this._submitModal(this.state.scoreInput),
-            this.state.scoreInput == ""
-          )}
+          <Button
+            success
+            onPress={() => this._submitModal(this.state.scoreInput)}
+            disabled={this.state.scoreInput == ""}
+          >
+            <Icon family="FontAwesome" name="plus" />
+          </Button>
         </Left>
         <Body>
-          {this._renderButton(
-            "  -  ",
-            () => this._submitModal(-parseInt(this.state.scoreInput)),
-            this.state.scoreInput == ""
-          )}
+          <Button
+            success
+            onPress={() => this._submitModal(-parseInt(this.state.scoreInput))}
+            disabled={this.state.scoreInput == ""}
+          >
+            <Icon family="FontAwesome" name="minus" />
+          </Button>
         </Body>
         <Right>
           <Button dark onPress={() => this._closeModal()}>
@@ -155,24 +153,15 @@ export default class MainScreen extends React.Component {
               </TouchableOpacity>
             </Left>
             <Body>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("Player", {
-                    userid: item.id,
-                    username: item.name
-                  })
-                }
-              >
-                <Text style={styles.name}>#{scorecount}</Text>
-              </TouchableOpacity>
+              <Text style={styles.count}>#{scorecount}</Text>
             </Body>
-            <Right>
-              <TouchableOpacity
-                onPress={() => this._openModal(item.id, item.name)}
-              >
+            <TouchableOpacity
+              onPress={() => this._openModal(item.id, item.name)}
+            >
+              <Right>
                 <Text style={styles.score}>{totalscore}</Text>
-              </TouchableOpacity>
-            </Right>
+              </Right>
+            </TouchableOpacity>
           </ListItem>
         )}
       </Observer>
@@ -237,12 +226,16 @@ export default class MainScreen extends React.Component {
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: 20
+    fontSize: 23
   },
   score: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 23,
     textAlign: "right"
+  },
+  count: {
+    fontWeight: "bold",
+    fontSize: 23
   },
   inputscore: {
     color: "#222222",

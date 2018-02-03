@@ -39,11 +39,6 @@ export default class Player {
     this.name = name.charAt(0).toUpperCase() + name.substring(1, 12);
     this.id = newid;
     this.bgcolor = colorArr[nextColorId++];
-
-    // Some random scores for debugging/development:
-    //this.addScore(Math.floor(Math.random() * 20 + 1) * 5);
-    //this.addScore(Math.floor(Math.random() * 60 + 1) * 5);
-    //this.addScore(Math.floor(Math.random() * 15 + 1) * 5);
   }
 
   @action

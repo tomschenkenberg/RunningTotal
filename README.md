@@ -9,5 +9,16 @@ So make no mistake. This is a laboratory project at best. Not an example of how 
 ## Major Components used in this project
 - React Native
 - Mobx
-- Mobx Persist
 - Native Base
+
+
+
+
+
+
+## Various stuff I need to type in to get it working
+
+
+After linking stuff in Android dir;
+
+inside android folder run: gradlew clean

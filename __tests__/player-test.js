@@ -23,4 +23,9 @@ test('Player Scores', () => {
     // Test expected state
     expect(p.totalscore).toBe(30);
     expect(p.scorecount).toBe(3);
+
+    // Clear scores
+    p.clearScores();
+    expect(p.scorecount).toBe(0);
+    
 });

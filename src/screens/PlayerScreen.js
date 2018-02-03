@@ -4,7 +4,6 @@ import React from "react";
 import { StyleSheet, FlatList, Modal } from "react-native";
 import {
   Text,
-  Icon,
   Button,
   List,
   ListItem,
@@ -19,6 +18,7 @@ import {
   Item
 } from "native-base";
 import { observer, inject } from "mobx-react";
+import Icon from "../components/TIcon";
 
 @inject("playerStore")
 @observer
@@ -69,7 +69,7 @@ export default class PlayerScreen extends React.Component {
               this.setState({ isModalVisible: true });
             }}
           >
-            <Icon name="undo" />
+            <Icon family="FontAwesome" name="pencil" style={{fontSize:15}} />
           </Button>
         </Right>
       </ListItem>
@@ -123,6 +123,7 @@ export default class PlayerScreen extends React.Component {
                     <Input
                       autoCorrect={false}
                       returnKeyType="done"
+                      keyboardType="numeric"
                       multiline={false}
                       ref={c => {
                         this.nameInput = c;

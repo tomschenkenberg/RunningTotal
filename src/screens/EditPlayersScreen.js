@@ -17,7 +17,6 @@ import {
   Text,
   Button,
   ListItem,
-  Icon,
   Footer,
   FooterTab,
   Card,
@@ -29,6 +28,7 @@ import {
   Item
 } from "native-base";
 import { observer, inject } from "mobx-react";
+import Icon from "../components/TIcon";
 
 @inject("playerStore")
 @observer
@@ -50,7 +50,7 @@ export default class EditPlayersScreen extends React.Component {
   renderItem = ({ item }) => {
     return (
       <ListItem>
-        <Icon name="ios-person" />
+        <Icon family="FontAwesome" name="user" />
         <Text style={{ paddingLeft: 9, fontSize: 22, flex: 2 }}>
           {item.name}
         </Text>
