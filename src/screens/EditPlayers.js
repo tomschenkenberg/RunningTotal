@@ -34,7 +34,7 @@ import Icon from "../components/Icon";
 
 @inject("playerStore")
 @observer
-export default class EditPlayersScreen extends React.Component {
+export default class EditPlayers extends React.Component {
   state = {
     isModalVisible: false,
     playername: ""
@@ -171,7 +171,7 @@ export default class EditPlayersScreen extends React.Component {
               vertical
               onPress={() => this.setState({ isModalVisible: true })}
             >
-              <Icon name="add" />
+              <Icon family="FontAwesome" name="user-plus" style={{ fontSize: 19 }}/>
               <Text>Add Player</Text>
             </Button>
           </FooterTab>

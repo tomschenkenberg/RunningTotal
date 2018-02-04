@@ -1,4 +1,4 @@
-# RunningTotal
+# Totally
 
 This is a React Native Mobile App that keeps score for card games. I'm learning React Native and this project is a personal challenge to see if I still have some coding skills in me.
 
@@ -8,6 +8,7 @@ So make no mistake. This is a laboratory project at best. Not an example of how 
 
 ## Major Components used in this project
 - React Native
+- React Navigation
 - Mobx
 - Native Base
 

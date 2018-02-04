@@ -9,20 +9,6 @@ import {
 } from "mobx";
 import store from "react-native-simple-store";
 
-// Nice colors for each player
-const colorArr = [
-  "#FFDEAD",
-  "#98a2c4",
-  "#b4daf8",
-  "#b8B4a0",
-  "#b14ad8",
-  "#84da28",
-  "#cccacc",
-  "#4cccec",
-  "#ccecc6"
-];
-var nextColorId = 0;
-
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -30,7 +16,6 @@ function isNumeric(n) {
 // -----------------------------------------------------------------
 export default class Player {
   @observable id = null;
-  @observable bgcolor = "";
   @observable name = "";
   @observable _scores = new Map();
 
@@ -38,7 +23,6 @@ export default class Player {
     // Capatalize the first letter of the name, max 12 characters:
     this.name = name.charAt(0).toUpperCase() + name.substring(1, 12);
     this.id = newid;
-    this.bgcolor = colorArr[nextColorId++];
   }
 
   @action
@@ -87,6 +71,7 @@ export default class Player {
     return sum;
   }
 
+  /* Returns the number of recorded scores */
   @computed
   get scorecount(): number {
     return this._scores.size;

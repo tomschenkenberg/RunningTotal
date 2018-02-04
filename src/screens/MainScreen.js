@@ -33,7 +33,6 @@ import { observer, inject } from "mobx-react";
 import { Observer } from "mobx-react/native";
 
 import Icon from "../components/Icon";
-//import Header from "../components/Header";
 
 @inject("playerStore")
 @observer
@@ -146,11 +145,15 @@ export default class MainScreen extends React.Component {
   _renderItem = ({ item }) => {
     const scorecount = this.props.playerStore.getPlayer(item.id).scorecount;
     const totalscore = this.props.playerStore.getPlayer(item.id).totalscore;
+
+    // Make the badge with the highest scorecount green and the rest grey
     const badgecolor = {
       backgroundColor: this.props.playerStore.isHighestScoreCount(item.id)
         ? "#4b4"
-        : "#bbb"
+        : "#aaa"
     };
+
+    // Negative scores are red
     const scorecolor = {
       color:
         this.props.playerStore.getPlayer(item.id).totalscore >= 0
@@ -205,6 +208,16 @@ export default class MainScreen extends React.Component {
               Totally App
             </Title>
           </Body>
+          <Right>
+            <Button
+              transparent
+              light
+              vertical
+              onPress={() => this.props.navigation.navigate("Info")}
+            >
+              <Icon name="info-circle" family="FontAwesome" />
+            </Button>
+          </Right>
         </Header>
         <Content>
           <Modal

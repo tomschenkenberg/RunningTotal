@@ -24,7 +24,7 @@ import Icon from "../components/Icon";
 
 @inject("playerStore")
 @observer
-export default class PlayerScreen extends React.Component {
+export default class PlayerDetails extends React.Component {
   state = {
     isModalVisible: false,
     editscore: "",
