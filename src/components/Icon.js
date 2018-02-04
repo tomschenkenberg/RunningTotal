@@ -11,7 +11,7 @@ import { ViewPropTypes } from "react-native";
 import { StyleProvider, getTheme, Icon } from "native-base";
 import PropTypes from "prop-types";
 
-export default class TIcon extends React.Component {
+export default class CustomIcon extends React.Component {
   render() {
     const { family, name, style } = this.props;
     const icon = <Icon name={name} style={style} />;
@@ -24,7 +24,7 @@ export default class TIcon extends React.Component {
   }
 }
 
-TIcon.propTypes = {
+CustomIcon.propTypes = {
   family: PropTypes.string,
   name: PropTypes.string.isRequired,
   style: PropTypes.any

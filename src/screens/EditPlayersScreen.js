@@ -25,17 +25,16 @@ import {
   Right,
   Body,
   Input,
-  Item
+  Item,
+  Title,
+  Header
 } from "native-base";
 import { observer, inject } from "mobx-react";
-import Icon from "../components/TIcon";
+import Icon from "../components/Icon";
 
 @inject("playerStore")
 @observer
 export default class EditPlayersScreen extends React.Component {
-  static navigationOptions = {
-    title: "Edit Players"
-  };
   state = {
     isModalVisible: false,
     playername: ""
@@ -50,15 +49,16 @@ export default class EditPlayersScreen extends React.Component {
   renderItem = ({ item }) => {
     return (
       <ListItem>
-        <Icon family="FontAwesome" name="user" />
-        <Text style={{ paddingLeft: 9, fontSize: 22, flex: 2 }}>
+        <Icon family="FontAwesome" name="user" style={{ fontSize: 28 }} />
+        <Text style={{ paddingLeft: 9, fontSize: 28, flex: 2 }}>
           {item.name}
         </Text>
         <Button
           danger
+          small
           onPress={() => this.props.playerStore.deletePlayer(item.id)}
         >
-          <Text>X</Text>
+          <Icon family="FontAwesome" name="trash" />
         </Button>
       </ListItem>
     );
@@ -70,6 +70,24 @@ export default class EditPlayersScreen extends React.Component {
 
     return (
       <Container>
+        <Header>
+          <Left>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.goBack(null)}
+            >
+              <Icon
+                family="FontAwesome"
+                name="arrow-left"
+                style={{ fontSize: 28 }}
+              />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{ fontSize: 28 }}>Edit Players</Title>
+          </Body>
+          <Right />
+        </Header>
         <Content>
           <Modal
             transparent={true}
@@ -90,7 +108,7 @@ export default class EditPlayersScreen extends React.Component {
           >
             <Card>
               <CardItem header>
-                <Text>Add Player</Text>
+                <Text style={{ fontSize: 24 }}>Add Player</Text>
               </CardItem>
               <CardItem>
                 <Body>
@@ -113,18 +131,21 @@ export default class EditPlayersScreen extends React.Component {
               <CardItem footer>
                 <Left>
                   <Button
-                    info
+                    success
                     onPress={() => this.handleCreatePlayer()}
                     accessibilityLabel="Add Player"
                     disabled={
                       this.state.playername == "" ||
                       playercount > 8 ||
-                      this.props.playerStore.playerExists(
-                        this.state.playername
-                      )
+                      this.props.playerStore.playerExists(this.state.playername)
                     }
                   >
-                    <Text>Add Player</Text>
+                    <Icon
+                      family="FontAwesome"
+                      name="user-plus"
+                      style={{ fontSize: 19 }}
+                    />
+                    <Text style={{ fontSize: 19 }}>Add Player</Text>
                   </Button>
                 </Left>
                 <Right>
@@ -132,7 +153,7 @@ export default class EditPlayersScreen extends React.Component {
                     dark
                     onPress={() => this.setState({ isModalVisible: false })}
                   >
-                    <Text> Cancel </Text>
+                    <Text style={{ fontSize: 19 }}> Cancel </Text>
                   </Button>
                 </Right>
               </CardItem>

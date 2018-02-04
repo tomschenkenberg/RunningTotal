@@ -1,5 +1,4 @@
 /* @flow */
-
 import { StackNavigator } from "react-navigation";
 
 // Screens
@@ -8,7 +7,8 @@ import MainScreen from "./screens/MainScreen";
 import EditPlayersScreen from "./screens/EditPlayersScreen";
 
 const stackNavigatorConfig = {
-  initialRouteName: "Main"
+  initialRouteName: "Main",
+  headerMode: "none"
 };
 
 export default StackNavigator(

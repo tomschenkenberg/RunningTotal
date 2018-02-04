@@ -83,6 +83,16 @@ export default class PlayerStore {
     return false;
   }
 
+  isHighestScoreCount(id: number): boolean {
+    // Find out if player has the highest scorecount
+    const playerscorecount = this.getPlayer(id).scorecount;
+    var highestscorecount = 0;
+    for (var v of this.players.values()) {
+      if (v.scorecount > highestscorecount) highestscorecount = v.scorecount;
+    }
+    return playerscorecount >= highestscorecount;
+  }
+
   @computed
   get playerCount(): number {
     return this.players.size;

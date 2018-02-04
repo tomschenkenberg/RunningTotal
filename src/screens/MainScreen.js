@@ -17,14 +17,23 @@ import {
   Card,
   CardItem,
   Item,
-  Input
+  Input,
+  Badge,
+  Header
 } from "native-base";
-import { StyleSheet, FlatList, TouchableOpacity, Modal } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Alert
+} from "react-native";
 
 import { observer, inject } from "mobx-react";
 import { Observer } from "mobx-react/native";
 
-import Icon from "../components/TIcon";
+import Icon from "../components/Icon";
+//import Header from "../components/Header";
 
 @inject("playerStore")
 @observer
@@ -34,10 +43,6 @@ export default class MainScreen extends React.Component {
     currentPlayerId: 0,
     currentPlayerName: "",
     scoreInput: ""
-  };
-
-  static navigationOptions = {
-    title: "Totally"
   };
 
   _openModal(id: number, playername: string) {
@@ -58,16 +63,12 @@ export default class MainScreen extends React.Component {
     this._closeModal();
   }
 
-  _renderButton = (text, onPress, disable = false) => (
-    <Button success onPress={onPress} disabled={disable}>
-      <Text>{text}</Text>
-    </Button>
-  );
-
   _renderModalContent = () => (
     <Card>
       <CardItem header>
-        <Text>Enter new score for {this.state.currentPlayerName}</Text>
+        <Text style={{ fontSize: 24 }}>
+          Enter new score for {this.state.currentPlayerName}
+        </Text>
       </CardItem>
       <CardItem>
         <Left />
@@ -128,6 +129,16 @@ export default class MainScreen extends React.Component {
     this.setState({ scoreInput: newText });
   };
 
+  handleResetScores() {
+    Alert.alert("Reset Scores", "Do you want to reset all scores?", [
+      {
+        text: "Cancel",
+        style: "cancel"
+      },
+      { text: "OK", onPress: () => this.props.playerStore.resetScores() }
+    ]);
+  }
+
   _renderHeader = () => {
     return <ListItem header first />;
   };
@@ -135,11 +146,22 @@ export default class MainScreen extends React.Component {
   _renderItem = ({ item }) => {
     const scorecount = this.props.playerStore.getPlayer(item.id).scorecount;
     const totalscore = this.props.playerStore.getPlayer(item.id).totalscore;
+    const badgecolor = {
+      backgroundColor: this.props.playerStore.isHighestScoreCount(item.id)
+        ? "#4b4"
+        : "#bbb"
+    };
+    const scorecolor = {
+      color:
+        this.props.playerStore.getPlayer(item.id).totalscore >= 0
+          ? "#000"
+          : "#c00"
+    };
 
     return (
       <Observer>
         {() => (
-          <ListItem style={{ backgroundColor: item.bgcolor }}>
+          <ListItem>
             <Left>
               <TouchableOpacity
                 onPress={() =>
@@ -151,17 +173,17 @@ export default class MainScreen extends React.Component {
               >
                 <Text style={styles.name}>{item.name}</Text>
               </TouchableOpacity>
+              <Badge style={[badgecolor]}>
+                <Text style={{ color: "white" }}>{scorecount}</Text>
+              </Badge>
             </Left>
             <Body>
-              <Text style={styles.count}>#{scorecount}</Text>
+              <TouchableOpacity
+                onPress={() => this._openModal(item.id, item.name)}
+              >
+                <Text style={[styles.score, scorecolor]}>{totalscore}</Text>
+              </TouchableOpacity>
             </Body>
-            <TouchableOpacity
-              onPress={() => this._openModal(item.id, item.name)}
-            >
-              <Right>
-                <Text style={styles.score}>{totalscore}</Text>
-              </Right>
-            </TouchableOpacity>
           </ListItem>
         )}
       </Observer>
@@ -177,6 +199,13 @@ export default class MainScreen extends React.Component {
     const playersdata = this.props.playerStore.SortedArray;
     return (
       <Container>
+        <Header>
+          <Body>
+            <Title style={{ fontSize: 28, textAlign: "center" }}>
+              Totally App
+            </Title>
+          </Body>
+        </Header>
         <Content>
           <Modal
             transparent={true}
@@ -207,13 +236,10 @@ export default class MainScreen extends React.Component {
               vertical
               onPress={() => this.props.navigation.navigate("EditPlayers")}
             >
-              <Icon name="settings" />
+              <Icon name="users" family="FontAwesome" />
               <Text>Players</Text>
             </Button>
-            <Button
-              vertical
-              onPress={() => this.props.playerStore.resetScores()}
-            >
+            <Button vertical onPress={() => this.handleResetScores()}>
               <Icon name="alert" />
               <Text>Reset Scores</Text>
             </Button>
@@ -226,16 +252,13 @@ export default class MainScreen extends React.Component {
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: 23
+    fontSize: 35,
+    paddingRight: 5
   },
   score: {
     fontWeight: "bold",
-    fontSize: 23,
+    fontSize: 40,
     textAlign: "right"
-  },
-  count: {
-    fontWeight: "bold",
-    fontSize: 23
   },
   inputscore: {
     color: "#222222",

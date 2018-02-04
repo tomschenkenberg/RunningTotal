@@ -15,17 +15,16 @@ import {
   Card,
   CardItem,
   Input,
-  Item
+  Item,
+  Header,
+  Title
 } from "native-base";
 import { observer, inject } from "mobx-react";
-import Icon from "../components/TIcon";
+import Icon from "../components/Icon";
 
 @inject("playerStore")
 @observer
 export default class PlayerScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: `Player ${navigation.state.params.username}`
-  });
   state = {
     isModalVisible: false,
     editscore: "",
@@ -37,11 +36,12 @@ export default class PlayerScreen extends React.Component {
     const playername = this.props.playerStore.getPlayer(params.userid).name;
     const scorecount = this.props.playerStore.getPlayer(params.userid)
       .scorecount;
+    const t = (scorecount==1) ? "recorded score" : "recorded scores";   
 
     return (
       <ListItem itemHeader>
-        <Text>
-          {scorecount} recorded scores for {playername}
+        <Text style={{ fontSize: 20 }}>
+          {scorecount} {t} for {playername}
         </Text>
       </ListItem>
     );
@@ -69,7 +69,7 @@ export default class PlayerScreen extends React.Component {
               this.setState({ isModalVisible: true });
             }}
           >
-            <Icon family="FontAwesome" name="pencil" style={{fontSize:15}} />
+            <Icon family="FontAwesome" name="pencil" style={{ fontSize: 15 }} />
           </Button>
         </Right>
       </ListItem>
@@ -95,6 +95,25 @@ export default class PlayerScreen extends React.Component {
     const { params } = this.props.navigation.state;
     return (
       <Container>
+        <Header>
+          <Left>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.goBack(null)}
+            >
+              <Icon
+                family="FontAwesome"
+                name="arrow-left"
+                style={{ fontSize: 28 }}
+              />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{ fontSize: 28, textAlign: "left" }}>
+              Player {this.props.playerStore.getPlayer(params.userid).name}
+            </Title>
+          </Body>
+        </Header>
         <Content>
           <Modal
             transparent={true}
@@ -114,10 +133,10 @@ export default class PlayerScreen extends React.Component {
           >
             <Card>
               <CardItem header>
-                <Text>Edit Score</Text>
+                <Text style={{ fontSize: 24 }}>Edit Score</Text>
               </CardItem>
               <CardItem>
-              <Left/>
+                <Left />
                 <Body>
                   <Item regular>
                     <Input
@@ -132,12 +151,13 @@ export default class PlayerScreen extends React.Component {
                       defaultValue={this.state.editscore.toString()}
                     />
                   </Item>
-                </Body><Right/>
+                </Body>
+                <Right />
               </CardItem>
               <CardItem footer>
                 <Left>
                   <Button
-                    info
+                    success
                     accessibilityLabel="OK"
                     disabled={this.state.editscore == ""}
                     onPress={() => {
@@ -150,7 +170,12 @@ export default class PlayerScreen extends React.Component {
                       this.setState({ isModalVisible: false });
                     }}
                   >
-                    <Text>OK</Text>
+                    <Icon
+                      family="FontAwesome"
+                      name="check"
+                      style={{ fontSize: 19 }}
+                    />
+                    <Text style={{ fontSize: 19 }}>OK</Text>
                   </Button>
                 </Left>
                 <Right>
@@ -158,7 +183,7 @@ export default class PlayerScreen extends React.Component {
                     dark
                     onPress={() => this.setState({ isModalVisible: false })}
                   >
-                    <Text> Cancel </Text>
+                    <Text style={{ fontSize: 19 }}> Cancel </Text>
                   </Button>
                 </Right>
               </CardItem>
@@ -182,7 +207,7 @@ export default class PlayerScreen extends React.Component {
 const styles = StyleSheet.create({
   big: {
     fontWeight: "bold",
-    fontSize: 22,
+    fontSize: 25,
     textAlign: "right"
   }
 });
