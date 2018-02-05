@@ -15,12 +15,11 @@ import {
   Card,
   CardItem,
   Input,
-  Item,
-  Header,
-  Title
+  Item
 } from "native-base";
 import { observer, inject } from "mobx-react";
 import Icon from "../components/Icon";
+import Header from "../components/GoBackHeader";
 
 @inject("playerStore")
 @observer
@@ -36,7 +35,7 @@ export default class PlayerDetails extends React.Component {
     const playername = this.props.playerStore.getPlayer(params.userid).name;
     const scorecount = this.props.playerStore.getPlayer(params.userid)
       .scorecount;
-    const t = (scorecount==1) ? "recorded score" : "recorded scores";   
+    const t = scorecount == 1 ? "recorded score" : "recorded scores";
 
     return (
       <ListItem itemHeader>
@@ -93,27 +92,14 @@ export default class PlayerDetails extends React.Component {
 
   render() {
     const { params } = this.props.navigation.state;
+    const headerlabel =
+      "Player " + this.props.playerStore.getPlayer(params.userid).name;
     return (
       <Container>
-        <Header>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.goBack(null)}
-            >
-              <Icon
-                family="FontAwesome"
-                name="arrow-left"
-                style={{ fontSize: 28 }}
-              />
-            </Button>
-          </Left>
-          <Body>
-            <Title style={{ fontSize: 28, textAlign: "left" }}>
-              Player {this.props.playerStore.getPlayer(params.userid).name}
-            </Title>
-          </Body>
-        </Header>
+        <Header
+          title={headerlabel}
+          backPress={() => this.props.navigation.goBack(null)}
+        />
         <Content>
           <Modal
             transparent={true}

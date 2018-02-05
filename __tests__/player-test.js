@@ -9,7 +9,6 @@ test('Player Instantiated', () => {
     expect(p.scorecount).toBe(0);
     expect(p.name).toBe('Player'); // Capital P
     expect(p.id).toBe(100);
-    expect(p.bgcolor).toBeDefined();
  });
 
 test('Player Scores', () => {

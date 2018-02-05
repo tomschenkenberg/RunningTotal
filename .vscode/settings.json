@@ -16,5 +16,8 @@
         "**/.gitignore": false,
         "**/androidx/": true,
         "**/ios/": true,
-    }
+        "**/.watchmanconfig": true,
+        "**/package-lock.json": true,
+    },
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

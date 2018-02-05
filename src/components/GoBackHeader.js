@@ -6,15 +6,12 @@ import { Text, Header, Left, Button, Body, Right, Title } from "native-base";
 import PropTypes from "prop-types";
 import Icon from "./Icon";
 
-export default class CustomHeader extends React.Component {
+export default class GoBackHeader extends React.Component {
   render() {
     return (
       <Header>
         <Left>
-          <Button
-            transparent
-            onPress={() => this.props.navigation.goBack(null)}
-          >
+          <Button transparent onPress={this.props.backPress}>
             <Icon
               family="FontAwesome"
               name="arrow-left"
@@ -25,13 +22,12 @@ export default class CustomHeader extends React.Component {
         <Body>
           <Title style={{ fontSize: 28 }}>{this.props.title}</Title>
         </Body>
-        <Right />
       </Header>
     );
   }
 }
 
-CustomHeader.propTypes = {
+GoBackHeader.propTypes = {
   title: PropTypes.string.isRequired
 };
 

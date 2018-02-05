@@ -13,10 +13,6 @@ So make no mistake. This is a laboratory project at best. Not an example of how 
 - Native Base
 
 
-
-
-
-
 ## Various stuff I need to type in to get it working
 
 

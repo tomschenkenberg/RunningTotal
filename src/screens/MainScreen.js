@@ -265,7 +265,7 @@ export default class MainScreen extends React.Component {
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: 35,
+    fontSize: 30,
     paddingRight: 5
   },
   score: {

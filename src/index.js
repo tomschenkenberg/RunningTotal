@@ -7,7 +7,7 @@ import { Provider } from "mobx-react/native";
 import Router from "./router";
 import PlayerStore from "./stores";
 
-class RunningTotal extends Component {
+class Totally extends Component {
   render() {
     return (
       <Provider playerStore={PlayerStore}>
@@ -17,4 +17,4 @@ class RunningTotal extends Component {
   }
 }
 
-AppRegistry.registerComponent("RunningTotal", () => RunningTotal);
+AppRegistry.registerComponent("totally", () => Totally);

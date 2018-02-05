@@ -10,7 +10,7 @@
  */
 
 import React from "react";
-import { FlatList, Modal } from "react-native";
+import { FlatList, Modal, Alert } from "react-native";
 import {
   Container,
   Content,
@@ -25,12 +25,11 @@ import {
   Right,
   Body,
   Input,
-  Item,
-  Title,
-  Header
+  Item
 } from "native-base";
 import { observer, inject } from "mobx-react";
 import Icon from "../components/Icon";
+import Header from "../components/GoBackHeader";
 
 @inject("playerStore")
 @observer
@@ -45,6 +44,19 @@ export default class EditPlayers extends React.Component {
     this.setState({ playername: "" });
     this.setState({ isModalVisible: false });
   }
+  handleDeletePlayer(id: number) {
+    Alert.alert(
+      "Delete Player",
+      "Delete player " + this.props.playerStore.getPlayer(id).name + "?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => this.props.playerStore.deletePlayer(id) }
+      ]
+    );
+  }
 
   renderItem = ({ item }) => {
     return (
@@ -53,11 +65,7 @@ export default class EditPlayers extends React.Component {
         <Text style={{ paddingLeft: 9, fontSize: 28, flex: 2 }}>
           {item.name}
         </Text>
-        <Button
-          danger
-          small
-          onPress={() => this.props.playerStore.deletePlayer(item.id)}
-        >
+        <Button danger small onPress={() => this.handleDeletePlayer(item.id)}>
           <Icon family="FontAwesome" name="trash" />
         </Button>
       </ListItem>
@@ -70,24 +78,10 @@ export default class EditPlayers extends React.Component {
 
     return (
       <Container>
-        <Header>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.goBack(null)}
-            >
-              <Icon
-                family="FontAwesome"
-                name="arrow-left"
-                style={{ fontSize: 28 }}
-              />
-            </Button>
-          </Left>
-          <Body>
-            <Title style={{ fontSize: 28 }}>Edit Players</Title>
-          </Body>
-          <Right />
-        </Header>
+        <Header
+          title="Edit Players"
+          backPress={() => this.props.navigation.goBack(null)}
+        />
         <Content>
           <Modal
             transparent={true}
@@ -171,7 +165,11 @@ export default class EditPlayers extends React.Component {
               vertical
               onPress={() => this.setState({ isModalVisible: true })}
             >
-              <Icon family="FontAwesome" name="user-plus" style={{ fontSize: 19 }}/>
+              <Icon
+                family="FontAwesome"
+                name="user-plus"
+                style={{ fontSize: 19 }}
+              />
               <Text>Add Player</Text>
             </Button>
           </FooterTab>
