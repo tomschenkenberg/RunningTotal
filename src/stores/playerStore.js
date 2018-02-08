@@ -27,7 +27,6 @@ export default class PlayerStore {
     store.keys().then(keys => {
       for (var playername of keys) {
         store.get(playername).then(player => {
-          //console.log("KEY=" + player.name + ", " + player.bgcolor);
           const p = Player.deserialize(player, ++nextPlayerId);
           this.players.set(p.id, p);
         });
