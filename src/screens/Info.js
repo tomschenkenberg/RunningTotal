@@ -16,7 +16,6 @@ import {
 } from "native-base";
 import Icon from "../components/Icon";
 import Header from "../components/GoBackHeader";
-import VersionNumber from "react-native-version-number";
 
 export default class Info extends React.Component {
   textlink(label: string, link: string) {
@@ -55,8 +54,7 @@ export default class Info extends React.Component {
           )}
         </Content>
         <Footer>
-          <Text>version: {VersionNumber.appVersion} </Text>
-          <Text>(build: {VersionNumber.buildVersion})</Text>
+          <Text>version 2</Text>
         </Footer>
       </Container>
     );

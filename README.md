@@ -6,16 +6,9 @@ Many parts are graciously copied from other repo's and tutorials. I should have 
 
 So make no mistake. This is a laboratory project at best. Not an example of how to approach or implement React Native.
 
-## Major Components used in this project
+## Major components used in this project
 - React Native
 - React Navigation
 - Mobx
 - Native Base
 
-
-## Various stuff I need to type in to get it working
-
-
-After linking stuff in Android dir;
-
-inside android folder run: gradlew clean
