@@ -123,7 +123,15 @@ export default class EditPlayers extends React.Component {
                 </Body>
               </CardItem>
               <CardItem footer>
-                <Left>
+              <Left>
+              <Button
+                dark
+                onPress={() => this.setState({ isModalVisible: false })}
+              >
+                <Text style={{ fontSize: 19 }}> Cancel </Text>
+              </Button>
+              </Left>
+                <Right>
                   <Button
                     success
                     onPress={() => this.handleCreatePlayer()}
@@ -141,21 +149,13 @@ export default class EditPlayers extends React.Component {
                     />
                     <Text style={{ fontSize: 19 }}>Add Player</Text>
                   </Button>
-                </Left>
-                <Right>
-                  <Button
-                    dark
-                    onPress={() => this.setState({ isModalVisible: false })}
-                  >
-                    <Text style={{ fontSize: 19 }}> Cancel </Text>
-                  </Button>
                 </Right>
               </CardItem>
             </Card>
           </Modal>
           <FlatList
             data={this.props.playerStore.players.values()}
-            keyExtractor={item => item.id}
+            keyExtractor={item => String(item.id)}
             renderItem={this.renderItem}
           />
         </Content>

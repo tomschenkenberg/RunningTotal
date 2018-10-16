@@ -178,7 +178,7 @@ export default class PlayerDetails extends React.Component {
           <List>
             <FlatList
               data={this.props.playerStore.getPlayer(params.userid).scores}
-              keyExtractor={index => index}
+              keyExtractor={index => index.toString()}
               renderItem={this._renderItem}
               ListHeaderComponent={this._renderHeader}
               ListFooterComponent={this._renderFooter}

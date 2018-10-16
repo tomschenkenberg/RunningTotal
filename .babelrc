@@ -1,5 +1,12 @@
 {
-  "presets": ["react-native", "flow"],
-  "plugins": ["transform-decorators-legacy"],
-  "retainLines": true
+  "presets": ["module:metro-react-native-babel-preset"],
+  "retainLines": true,
+  "plugins": [
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ]
+  ]
 }

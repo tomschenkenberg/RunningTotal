@@ -205,7 +205,7 @@ export default class MainScreen extends React.Component {
         <Header>
           <Body>
             <Title style={{ fontSize: 28, textAlign: "center" }}>
-              Totally App
+              Totally
             </Title>
           </Body>
           <Right>
@@ -236,7 +236,7 @@ export default class MainScreen extends React.Component {
           <List>
             <FlatList
               data={playersdata}
-              keyExtractor={item => item.id}
+              keyExtractor={item => String(item.id)}
               renderItem={this._renderItem}
               ListHeaderComponent={this._renderHeader}
               ListFooterComponent={this._renderFooter}
