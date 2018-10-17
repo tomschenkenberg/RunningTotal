@@ -54,7 +54,7 @@ export default class Info extends React.Component {
           )}
         </Content>
         <Footer>
-          <Text>version 3 (Oct 2018)</Text>
+          <Text>version 1.3 (Oct 2018)</Text>
         </Footer>
       </Container>
     );
